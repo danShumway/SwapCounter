@@ -3,3 +3,4 @@ deploy:
   api_key:
     secure: W7ZRP3OqkpNRJioVLceXhwmDs7CrBePL8yMhPUFsTHmY5aFWbj18nwO5DVgGivpcHWcMxwHPQgDQ9FEEcsTihfYtKL6YjI8RZdOe6GabkkpGZ1qRRUrexakrowf7pY9G2A3kX5HAyYbdJN133fBqGqun9BJtYfs4VJy5fRTx+Sk=
   app: whispering-atoll-4801
+  language:nodejs
