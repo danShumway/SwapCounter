@@ -64,7 +64,11 @@ exports.Deck = function(_startIndex, _endIndex, _suite) {
 		return 1; //Success.
 	}
 
+	this.TakeCard = function(_card) {}
+
+	//Not implemented.
 	this.Trade = function(_card, _deck) {
+		throw "Trading not implemented";
 		if(_deck) {
 			/*if(_card) {
 				//Check to see if you have the card you're trading.
