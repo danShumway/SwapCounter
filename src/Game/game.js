@@ -148,7 +148,7 @@ exports.Game = function() {
 
 			//Figure out what's going on with the board and return.
 			actions.push(["getPlayer", "player_id"]);
-			actions.push(["getBoard"]);
+			actions.push(["getBoard", "player_id"]);
 		}
 
 		return actions;
@@ -161,8 +161,11 @@ exports.Game = function() {
 		if(player && _board.player_order[_turn] === command_object.player_id) {
 			//Stuff in here for handeling commands.  Basically the main script for the game.
 			//etc...
-
-			if(_stage === _stages.Play) {
+			if(command === "getPlayer") {
+				this.getPlayer(command_object.player_id);
+			} else if(command === "getBoard") {
+				this.getBoard(command_object.player_id);
+			} else if(_stage === _stages.Play) {
 				if(command === "play") {
 
 
@@ -202,6 +205,8 @@ exports.Game = function() {
 					if(playArea[command_object.card_index] && !playArea[command_object.card_index].Tapped) {
 
 						//If it's being tapped into an already tapped stack.
+						playArea[command_object.card_index].Tapped = true;
+						//playAreass
 					}
 
 				} else {
