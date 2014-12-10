@@ -50,7 +50,7 @@ var path = require('path');
 
 var port = process.env.PORT || process.env.NODE_PORT || 8000;
 
-app.use('/_images', express.static(path.join(__dirname, '../views/images/')));
+app.use('/assets', express.static(path.join(__dirname, './views/assets')));
 app.get('/', function(req, res){
 	//res.send('<h1>Hello world</h1>');
 	res.sendFile(path.join(__dirname, '/views/index.html'));
@@ -75,7 +75,31 @@ io.on('connection', function (socket) {
 	//io.to(socket.id).emit('getCurrentConnection', canvas);
 
 	socket.on('join', function (data) {
+		
+		var id;
+
 		//Find a game that could use another person in it if nothing is specified, otherwise, to the specified game.
+		if(data.game_id) {
+
+		} else {
+			//Search through games and find the first one with only 1 player.
+			for (var g in games) {
+				if(games[g].GameState().players === 1) {
+					id = games[g].Join("Player");
+
+					console.log("joined existing game");
+					io.to(socket.id).emit('joined', { 'player_id':id, 'game_id':g});
+					return; //Send back the players ID.
+				}
+			} //If you get to the end and there aren't any games for you to join.
+			var gameID = NewGame();
+			id = games[gameID].Join("Player");
+
+			console.log("made new game")
+			io.to(socket.id).emit('joined', { 'player_id':id, 'game_id':g});
+			return;
+
+		}
 	});
 
 	socket.on('new', function (data) {

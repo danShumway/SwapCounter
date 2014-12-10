@@ -4,17 +4,97 @@
 		<meta charset="utf-8">
 		<title>Latinforimagination</title>
 
-		<link href="" rel="stylesheet" type="text/css" />
-		<script src="assets/scripts/socket.io.js"></script>
+		<link href="/assets/css/index.css" rel="stylesheet" type="text/css" />
+		<script src="/assets/scripts/socket.io.js"></script>
+		<script src="/assets/scripts/handlebars-v2.0.0.js"></script>
 	</head>
 
 	<body>
 
-		<div>
-			Stuff needs to go here.
+		<div class="game"> 
+		    <div class="hand" >
+		        <div class="card hidden"></div>
+		        <div class="card hidden"></div>
+		        <div class="card hidden"></div>
+		    </div>
+		    <div class="board">
+		        <div class="playArea">
+		            <div class="card hidden"></div>
+		            <div class="card hidden rotated"></div>
+		        </div>
+		        <div class="betArea">
+		            <div class="card"></div>
+		            <div class="card hidden"></div>
+		        </div>
+		        <div class="playArea">
+		            <div class="card"></div>
+		            <div class="card"></div>
+		            <div class="card"></div>
+		        </div>
+		    </div>
+		    <div class="hand">
+		        <div class="card"></div>
+		        <div class="card"></div>
+		        <div class="card"></div>
+		        <div class="card"></div>
+		    </div>
 		</div>
+		<div style="clear:both;">Stake: 15 points. <br/>5 Advantage </div>
+
+		<script src="assets/scrips/local_game.js"></script>
 
 		<script>
+			console.log("connecting");
+			var socket = io.connect('http://localhost:3000');
+
+			socket.on('connect', function() {
+				console.log('connected');
+
+				socket.emit("join", {});
+			});
+
+
+			//Recieve results
+			socket.on('response', function(data) {
+				//Get results and translate them into doing stuff.	
+			});
+
+		</script>
+
+
+
+
+		<!--<script id="board">
+
+			<div class="hand" >
+				{{#each o_card_hand}}
+		        <div class="card hidden"></div>
+		        <div class="card hidden"></div>
+		        <div class="card hidden"></div>
+		    </div>
+		    <div class="board">
+		        <div class="playArea">
+		            <div class="card hidden"></div>
+		            <div class="card hidden rotated"></div>
+		        </div>
+		        <div class="betArea">
+		            <div class="card"></div>
+		            <div class="card hidden"></div>
+		        </div>
+		        <div class="playArea">
+		            <div class="card"></div>
+		            <div class="card"></div>
+		            <div class="card"></div>
+		        </div>
+		    </div>
+		    <div class="hand">
+		        <div class="card"></div>
+		        <div class="card"></div>
+		        <div class="card"></div>
+		        <div class="card"></div>
+		    </div>
+
+
 			/*var canvas = document.getElementById("background-canvas");
 			var ctx = canvas.getContext('2d');
 
@@ -26,7 +106,7 @@
 
 			    }
 			}*/
-		</script>
+		</script>-->
 
 	</body>
 

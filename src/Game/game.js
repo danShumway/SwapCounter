@@ -302,4 +302,13 @@ exports.Game = function() {
 
 		return false;
 	}
+
+	//Still figuring this out.
+	this.GameState = function() {
+		var toReturn =  {
+			"players": _num_players,
+		};
+
+		return toReturn;
+	}
 }
