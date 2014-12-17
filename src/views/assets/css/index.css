@@ -5,21 +5,21 @@
 }
 
 .board {
-    width:400px;
+    width:650px;
     height:200px;
     background-color:rgb(240, 240, 240);
 }
 
 .board .betArea {
     clear:both;
-    width:400px;
+    width:650px;
     height:60px;
     background-color:rgb(230, 230, 230);
 }
 
 .board .playArea {
     clear:both;
-    width:400px;
+    width:650px;
     height:50px;
 }
 

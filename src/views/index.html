@@ -20,14 +20,16 @@
 		    </div>
 		    <div class="hand" id="hand"></div>
 		</div>
-		<div style="clear:both;">Stake: 15 points. <br/>5 Advantage </div>
+		<div style="clear:both;">Stake: <span id="stake"></span>
+		<br/>Advantage <span id="advantage"></span>
+		<br/>Status <span id="status"></span> </div>
 
 
 		<!--TEMPLATES-->
 
 		<script id="template_hand" type="text/x-handlebars-template">
 			{{#each cards}}
-	       		<div class="card">{{this}}</div>
+	       		<div class="card" onclick="play({{index}})">{{this}}</div>
 	       	{{/each}}
 		</script>
 

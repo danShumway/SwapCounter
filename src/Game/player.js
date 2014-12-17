@@ -13,10 +13,16 @@ exports.Player = function(_id, _name) {
 
 	//----------Internal functions--------------------------
 
-	var handToString = function() {
+	var handToString = function(hide) {
 		var _toReturn = [];
 		for(var i = 0; i < _hand.length; i++){
-			_toReturn.push(_hand[i].Clone());
+			var c = _hand[i].Clone();
+			_toReturn.push(c);
+
+			//If necessary, obsfucate card values.
+			if(hide) {
+				c.Number = '?';
+			}
 		}
 
 		return _toReturn; //
@@ -121,6 +127,7 @@ exports.Player = function(_id, _name) {
 			return {
 				"hand_size": _hand.length,
 				"deck_size": _deck.Count(),
+				"hand": handToString(true),
 			};
 		}
 	};

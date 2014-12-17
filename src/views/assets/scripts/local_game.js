@@ -53,6 +53,8 @@ socket.on('response', function(data) {
 			console.log(data);
 			updateBoard(data.data);
 		}
+	} else if (data.command === "getHand") {
+		UpdateHand(data);
 	}
 
 });
@@ -87,7 +89,7 @@ socket.on('disconnect', function(data) {
 //pass in the state of the board and update the graphics.
 var updateBoard = function(board) {
 
-	var data = {cards:[]}
+	var data = {cards:[]};
 
 	for(a in board.play_areas) {
 		//Update opponent and you.
@@ -97,6 +99,8 @@ var updateBoard = function(board) {
 		}
 
 		if(Game.player_id !== a) {
+			Game.opponent = a; //Update who my opponente is.
+
 			document.getElementById("opponentPlayArea").innerHTML = templates.playArea(data);
 		} else {
 			document.getElementById("playArea").innerHTML = templates.playArea(data);
@@ -104,21 +108,41 @@ var updateBoard = function(board) {
 	}
 
 	//Do the pot.
-	data = {cards:[]}
+	data = {cards:[]};
 	for (c in board.pot.cards) {
 		data.cards.push(board.pot.cards[c].Number);
 	}
 
 	document.getElementById("betArea").innerHTML = templates.betArea(data);
+
+
+	data = {cards:[]};
+	for(a in board.hands) {
+		//Update opponent and you.
+		var area = board.hands[a]; data = {cards:[]};
+		for(var i = 0; i < area.cards.length; i++) {
+			data.cards.push(area.cards[i].Number);
+		}
+
+		if(Game.player_id !== a) {
+			Game.opponent = a; //Update who my opponente is.
+
+			document.getElementById("opponentHand").innerHTML = templates.hand(data);
+		} else {
+			document.getElementById("hand").innerHTML = templates.hand(data);
+		}
+	}
 };
 
 
 var updateHand = function(hand) {
 	//Same thing. Update your hand and your opponents.
 
-	var data = {}
+	var data = {cards:[]};
 
-	//for (c in hand.)
+	for (c in hand){
+		data.cards.push(hand[c]);
+	}
 };
 
 

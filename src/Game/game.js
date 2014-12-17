@@ -312,6 +312,7 @@ exports.Game = function() {
 						"value": _board.pot.value, //The total threatened value for this part of the board.
 					},
 				"play_areas": {}, //playareas with playerID as the key (usues a public id for your opponents obviously)
+				"hands": {},
 			} ;
 
 			//do a step by step duplication of play_areas (also privatizing the IDs)
@@ -321,6 +322,12 @@ exports.Game = function() {
 					"cards": _board.play_areas[player].cards.map(function(element) { return element.Clone(); }), //An array of cards currently being bet.
 					"value": _board.play_areas[player].value, //The total threatened value for this part of the board.
 				};
+
+				//Get the cards for each hand.
+				var _h = this.GetPlayer(show);
+				gameState.hands[show] = {
+					"cards": _h.hand,
+				}
 			}
 
 
