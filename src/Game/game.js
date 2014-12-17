@@ -23,6 +23,10 @@ exports.Game = function() {
 	var _folding = false;
 	var _valid_skip = false;
 	var _available_actions = 1;
+	var _folds = 0;
+
+	//Nothing fancy, used purely as a hash for attaching data to the game.
+	this.data = {};
 
 
 
@@ -158,87 +162,107 @@ exports.Game = function() {
 
 		var player = _players[command_object.player_id];
 		//Valid player and if it's your turn.
-		if(player && _board.player_order[_turn] === command_object.player_id) {
-			//Stuff in here for handeling commands.  Basically the main script for the game.
-			//etc...
+		if(player) {
+
+			//Basic commands for info.
 			if(command === "getPlayer") {
-				this.getPlayer(command_object.player_id);
+				return this.getPlayer(command_object.player_id);
 			} else if(command === "getBoard") {
-				this.getBoard(command_object.player_id);
-			} else if(_stage === _stages.Play) {
-				if(command === "play") {
+				return this.GetBoard(command_object.player_id);
+			}
 
 
-					//Get the card.
-					var card = player.PlayCard(command_object.player_id, command_object.card_index);
+			if(_running && _board.player_order[_turn] === command_object.player_id) {
+				//Stuff in here for handeling commands.  Basically the main script for the game.
+				//etc...
+				if(_stage === _stages.Play) {
+					if(command === "play") {
 
-					//If it exists.
-					if(card) {
-						card.Tapped = false; //Set up initial state for the card.
+						//Get the card.
+						var card = player.PlayCard(command_object.player_id, command_object.card_index);
+
+						//If it exists.
+						if(card) {
+							card.Tapped = false; //Set up initial state for the card.
+							var playArea = _board.play_areas[command_object.player_id];
+
+							//If it's being played onto an existing card, +1 action (just enough to play a duplicate card)
+							for(var i = 0; i < playArea.cards.length; i++) {
+								if(playArea.cards[i].Number === card.Number && !playArea.cards[i].Tapped) {
+									_available_actions++;
+									break;
+								}	
+							}
+
+							//Append it to the list of played cards and update the board, if you have the actions available to do so.
+							if(_available_actions != 0) {
+								playArea.cards.push(card); playArea.value += card.Number;
+								_available_actions--;
+								_valid_skip = true;
+
+								return true;
+							}
+						}
+
+						//Return the card.
+						player.TakeCard(command_object.player_id, card);
+						return false;
+
+					} else if (command === "tap") {
 						var playArea = _board.play_areas[command_object.player_id];
+						//If the card exists and is not already played.
+						if(playArea[command_object.card_index] && !playArea[command_object.card_index].Tapped) {
 
-						//If it's being played onto an existing card, +1 action (just enough to play a duplicate card)
-						for(var i = 0; i < playArea.cards.length; i++) {
-							if(playArea.cards[i].Number === card.Number && !playArea.cards[i].Tapped) {
-								_available_actions++;
-								break;
-							}	
+							//If it's being tapped into an already tapped stack.
+							playArea[command_object.card_index].Tapped = true;
+							//playAreass
 						}
 
-						//Append it to the list of played cards and update the board, if you have the actions available to do so.
-						if(_available_actions != 0) {
-							playArea.cards.push(card); playArea.value += card.Number;
-							_available_actions--;
-							_valid_skip = true;
-
-							return true;
-						}
+					} else {
+						//Unrecognized or invalid command.
+						return false;
 					}
 
-					//Return the card.
-					player.TakeCard(command_object.player_id, card);
-					return false;
+				} else if (_stage === _stages.End){
 
-				} else if (command === "tap") {
-					var playArea = _board.play_areas[command_object.player_id];
-					//If the card exists and is not already played.
-					if(playArea[command_object.card_index] && !playArea[command_object.card_index].Tapped) {
+					if(command === "fold") {
+						//
 
-						//If it's being tapped into an already tapped stack.
-						playArea[command_object.card_index].Tapped = true;
-						//playAreass
+						_folding = true;
+
+						endTurn();
+					} else {
+
+						//If you're not forced into the previous action (ie, other people haven't folded.)
+						if(!_folding){
+							if(command === "bet") {
+
+								var card = player.PlayCard(command_object.player_id, command_object.card_index);
+
+								//If it exists.
+								if(card) {
+
+									var pot = _board.pot;
+									pot.cards.push(card); playArea.value += card.Number;
+									endTurn();
+									//
+									return true;
+								}
+
+								//you got here and it's not good.
+								return false;
+
+							} else if (command === "draw") {
+
+								player.Draw(command_object.player_id, 1);
+
+								endTurn();
+							}
+						} 
 					}
 
-				} else {
 					//Unrecognized or invalid command.
-					return false;
 				}
-
-			} else if (_stage === _stages.End){
-
-				if(command === "fold") {
-					//
-
-					_folding = true;
-
-					endTurn();
-				} else {
-
-					//If you're not forced into the previous action (ie, other people haven't folded.)
-					if(!_folding){
-						if(command === "bet") {
-
-
-							endTurn();
-						} else if (command === "draw") {
-
-
-							endTurn();
-						}
-					} 
-				}
-
-				//Unrecognized or invalid command.
 			}
 
 			//Either bad ID or it's not your turn.
@@ -250,10 +274,28 @@ exports.Game = function() {
 		//-----------------------------------------------------
 
 		function endTurn(){
-			if(false) {
-				//Check to see if everyone has folded.
+			if(_folds === _num_players) {
+				//Check to see if everyone has folded, and
+				//if so, add up points for the round.
+
+
+				//Is the whole game over?
+
+				//Normally this is where trading would go, but time constraints mean we're not doing trading.
+
+
+
+				//End it by reseting the round.
+				for (player in _players) {
+				_players[player].Shuffle(player);
+				_players[player].Draw(player, 5);
+			}
+
 
 			} else {
+				if(_folding) {
+					_folds++;
+				}
 				_turn = (_turn+1)%_board.player_order.length;
 			}
 		}
@@ -307,7 +349,12 @@ exports.Game = function() {
 	this.GameState = function() {
 		var toReturn =  {
 			"players": _num_players,
+			"joined": []
 		};
+
+		for(player in _players) {
+			toReturn.joined.push(_players[player].Name());
+		}
 
 		return toReturn;
 	}

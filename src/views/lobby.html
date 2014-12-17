@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Latinforimagination</title>
+
+		<link href="/assets/css/lobby.css" rel="stylesheet" type="text/css" />
+		<script src="/assets/scripts/socket.io.js"></script>
+		<script src="/assets/scripts/handlebars-v2.0.0.js"></script>
+	</head>
+
+	<body>
+
+		<div class="games"> 
+			<table style="width:100%" id="games">
+
+			</table>
+			<input type="text" id="name" /><button id="create" onclick="create()">Create New</button>
+			<div>Click on a game to join.  Enter a name and click 'Create' to set up a new game.</div>
+		</div>
+
+
+		<!--TEMPLATES-->
+
+		<script id="template_games" type="text/x-handlebars-template">
+			{{#each games}}
+	       		<tr onclick="joinGame('{{this.game_id}}')" {{#if this.open}}class="open"{{/if}}>
+	       			<td>Host: {{this.player_host}}</td><td>{{#if this.open}}Open (1/2){{else}}Full (2/2){{/if}}</td>
+	       		</tr>
+	       	{{/each}}
+		</script>
+
+		<!--SCRIPTS-->
+
+		<script src="assets/scripts/local_lobby.js"></script>
+	</body>
+
+</html>

@@ -12,102 +12,54 @@
 	<body>
 
 		<div class="game"> 
-		    <div class="hand" >
-		        <div class="card hidden"></div>
-		        <div class="card hidden"></div>
-		        <div class="card hidden"></div>
-		    </div>
+		    <div class="hand" id="opponentHand"></div>
 		    <div class="board">
-		        <div class="playArea">
-		            <div class="card hidden"></div>
-		            <div class="card hidden rotated"></div>
-		        </div>
-		        <div class="betArea">
-		            <div class="card"></div>
-		            <div class="card hidden"></div>
-		        </div>
-		        <div class="playArea">
-		            <div class="card"></div>
-		            <div class="card"></div>
-		            <div class="card"></div>
-		        </div>
+		        <div class="playArea" id="opponentPlayArea"></div>
+		        <div class="betArea" id="betArea"></div>
+		        <div class="playArea" id="playArea"></div>
 		    </div>
-		    <div class="hand">
-		        <div class="card"></div>
-		        <div class="card"></div>
-		        <div class="card"></div>
-		        <div class="card"></div>
-		    </div>
+		    <div class="hand" id="hand"></div>
 		</div>
 		<div style="clear:both;">Stake: 15 points. <br/>5 Advantage </div>
 
-		<script src="assets/scrips/local_game.js"></script>
 
-		<script>
-			console.log("connecting");
-			var socket = io.connect('http://localhost:3000');
+		<!--TEMPLATES-->
 
-			socket.on('connect', function() {
-				console.log('connected');
-
-				socket.emit("join", {});
-			});
-
-
-			//Recieve results
-			socket.on('response', function(data) {
-				//Get results and translate them into doing stuff.	
-			});
-
+		<script id="template_hand" type="text/x-handlebars-template">
+			{{#each cards}}
+	       		<div class="card">{{this}}</div>
+	       	{{/each}}
 		</script>
 
+		<script id="template_playArea" type="text/x-handlebars-template">
+			{{#each cards}}
+	       		<div class="card {{#if this.rotated}}rotated{{/if}}">{{this.card}}</div>
+	       	{{/each}}
+		</script>
+
+		<script id="template_betArea" type="text/x-handlebars-template">
+			{{#each cards}}
+				<div class="card">{{this}}</div>
+			{{/each}}
+		</script>
+
+		<!--SCRIPTS-->
+
+		<script src="assets/scripts/local_game.js"></script>
+
+		<script>
+			var templates = {}
+			templates.hand = Handlebars.compile(document.querySelector("#template_hand").innerHTML);
+			templates.playArea = Handlebars.compile(document.querySelector("#template_playArea").innerHTML);
+			templates.betArea = Handlebars.compile(document.querySelector("#template_betArea").innerHTML);
 
 
-
-		<!--<script id="board">
-
-			<div class="hand" >
-				{{#each o_card_hand}}
-		        <div class="card hidden"></div>
-		        <div class="card hidden"></div>
-		        <div class="card hidden"></div>
-		    </div>
-		    <div class="board">
-		        <div class="playArea">
-		            <div class="card hidden"></div>
-		            <div class="card hidden rotated"></div>
-		        </div>
-		        <div class="betArea">
-		            <div class="card"></div>
-		            <div class="card hidden"></div>
-		        </div>
-		        <div class="playArea">
-		            <div class="card"></div>
-		            <div class="card"></div>
-		            <div class="card"></div>
-		        </div>
-		    </div>
-		    <div class="hand">
-		        <div class="card"></div>
-		        <div class="card"></div>
-		        <div class="card"></div>
-		        <div class="card"></div>
-		    </div>
+			document.getElementById("hand").innerHTML = templates.hand({cards:[1, 2, 4, 3, 7]});
+			document.getElementById("betArea").innerHTML = templates.betArea({cards:[3,3,3,3]});
+			document.getElementById("playArea").innerHTML = templates.playArea({cards:[{card:1, rotated:true}, {card:1, rotated:false}]});
 
 
-			/*var canvas = document.getElementById("background-canvas");
-			var ctx = canvas.getContext('2d');
-
-			for(var i = 0; i < 2000; i++){
-			    for(var j = 0; j < 400; j++){
-			        
-			        ctx.fillStyle= 'rgb('+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')';
-			        ctx.fillRect(_g(i), _g(j), _g(1), _g(1));
-
-			    }
-			}*/
-		</script>-->
-
+		</script>
 	</body>
 
 </html>

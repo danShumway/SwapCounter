@@ -13,19 +13,6 @@ var Card = function(_number, _suite, _deckID) {
 			"Clone": this.Clone,
 		};
 	};
-	/*this.Number = function(){ return _number; },
-	this.Suite = function(){ return _suite; }
-
-	//I want card ids to go here.
-
-	//This gets set during games in order
-	//to properly sync local play and online play.  Actually probably unneccessary now that I think about it.
-	this.instanceID = -1;
-
-	//Other just "settable" data.  Cards are really just open enums at this point, so you can feel free to just append data to them.
-	this.tapped = false;
-	//this.counters = []; and so on.  There's no reason these *need* to have been specified here.  IN fact, I kind of don't want them to have been?
-	*/
 }
 
 //Attached function for validating cards and copying them when you don't trust them.

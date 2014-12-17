@@ -1,0 +1,19 @@
+.game{
+    background-color:rgb(170,170,170);
+    width:400px;
+    height:400px;
+}
+
+table {
+  border-spacing: 0.5rem;
+  border-style:solid;
+  background-color:rgb(240,240,240);
+}
+
+td {
+    background-color:rgb(230, 250, 230);
+}
+
+.open {
+    background-color:rgb(170, 170, 170);
+}
